@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   const [movies, setMovies] = useState([]);
@@ -53,8 +54,8 @@ function HomePage() {
 
   return (
     <>
-      <div className="homepage">
-        <h1>
+      <div className="bg-[#F2E6EE] p-4 flex flex-col items-center justify-center">
+        <h1 className="text-6xl text-center font-bold mb-4 text-[#00033D] font-mono">
           Welcome to CineMate! Home of all entertainment you need for a
           lifetime.
         </h1>
@@ -63,18 +64,37 @@ function HomePage() {
           placeholder="Search your favorite movies"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="p-2 border border-gray-300 rounded mb-4 w-full max-w-md"
         />
+        <button
+          onClick={() => {
+            if (validateSearchTerm(searchTerm)) {
+              fetchMovies(searchTerm);
+            } else {
+              alert("Please enter at least 3 characters to search.");
+            }
+          }}
+          className="bg-[#00033D] text-white px-4 py-2 rounded hover:bg-[#00033D]/80 transition-colors"
+        >
+          Search
+        </button>
       </div>
-      <div className="movie-list">
+      <div className="bg-[#F2E6EE] lg:flex-col">
         {loading && <p>Loading...</p>}
         {error && <p style={{ color: "red" }}>Error: {error.message}</p>}
         {!loading && !error && movies.length === 0 && <p>No movies found.</p>}
         {!loading && !error && movies.length > 0 && (
-          <ul>
+          <ul className="grid grid-cols-1  items-center justify-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {movies.map((movie) => (
               <li key={movie.imdbID}>
-                <h2>{movie.Title}</h2>
-                <img src={movie.Poster} alt={movie.Title} />
+                <h2 className="text-[#00033D] font-bold ">{movie.Title}</h2>
+                <Link to={`/movie/${movie.imdbID}`}>
+                  <img
+                    className="transition-transform duration-300 hover:scale-105 rounded-lg shadow-lg cursor-pointer"
+                    src={movie.Poster}
+                    alt={movie.Title}
+                  />
+                </Link>
                 <p>Year: {movie.Year}</p>
               </li>
             ))}
