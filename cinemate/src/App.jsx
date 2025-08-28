@@ -10,7 +10,7 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/front-end-capstone-project/" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/movie/:title" element={<DetailPage />} />
           <Route
             path="/search"
