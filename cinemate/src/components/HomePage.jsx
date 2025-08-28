@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import menu_open from "./menu_open.png";
+import mobile_friendly from "./mobile_friendly.png";
+import search from "./Search.png";
 
 function HomePage() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const validateSearchTerm = (term) => {
-    return term.trim() !== "" && term.length >= 3;
-  };
 
   // Reusable fetch function
   const fetchMovies = async (query) => {
@@ -38,64 +36,61 @@ function HomePage() {
 
   // Load default movies on first page load
   useEffect(() => {
-    fetchMovies("Pirates of the caribbean"); // default category
+    fetchMovies("Pirates of the Caribbean"); // default category
   }, []);
-
-  // Fetch movies when searchTerm changes
-  useEffect(() => {
-    if (validateSearchTerm(searchTerm)) {
-      fetchMovies(searchTerm);
-    } else if (searchTerm.trim() === "") {
-      fetchMovies("Pirates of the caribbean"); // reset to default if search cleared
-    } else {
-      setMovies([]);
-    }
-  }, [searchTerm]);
 
   return (
     <>
-      <div className="bg-[#F2E6EE] p-4 flex flex-col items-center justify-center">
-        <h1 className="text-6xl text-center font-bold mb-4 text-[#00033D] font-mono">
+      {/* Header */}
+      <div className="bg-[#F2E6EE] p-4 flex flex-col items-center justify-center relative">
+        <h1 className="text-6xl text-center font-bold mb-4 text-[#00033D] font-mono pb-[60px] pt-[90px]">
           Welcome to CineMate! Home of all entertainment you need for a
           lifetime.
         </h1>
-        <input
-          type="text"
-          placeholder="Search your favorite movies"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border border-gray-300 rounded mb-4 w-full max-w-md"
-        />
-        <button
-          onClick={() => {
-            if (validateSearchTerm(searchTerm)) {
-              fetchMovies(searchTerm);
-            } else {
-              alert("Please enter at least 3 characters to search.");
-            }
-          }}
-          className="bg-[#00033D] text-white px-4 py-2 rounded hover:bg-[#00033D]/80 transition-colors"
-        >
-          Search
-        </button>
+
+        {/* Icons Navigation */}
+        <div className="absolute top-6 right-6 flex space-x-4">
+          {/* Search page */}
+          <Link to="/search">
+            <img
+              src={search}
+              alt="Search Icon"
+              className="w-10 h-10 cursor-pointer hover:scale-110 transition"
+            />
+          </Link>
+
+          {/* Contact page */}
+          <Link to="/contact">
+            <img
+              src={mobile_friendly}
+              alt="Contact Icon"
+              className="w-10 h-10 cursor-pointer hover:scale-110 transition"
+            />
+          </Link>
+        </div>
       </div>
-      <div className="bg-[#F2E6EE] lg:flex-col">
+
+      {/* Movies Section */}
+      <div className="bg-[#F2E6EE] lg:flex-col pr-[40px] pl-[40px]">
         {loading && <p>Loading...</p>}
         {error && <p style={{ color: "red" }}>Error: {error.message}</p>}
         {!loading && !error && movies.length === 0 && <p>No movies found.</p>}
+
         {!loading && !error && movies.length > 0 && (
-          <ul className="grid grid-cols-1  items-center justify-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {movies.map((movie) => (
               <li key={movie.imdbID}>
-                <h2 className="text-[#00033D] font-bold ">{movie.Title}</h2>
-                <Link to={`/movie/${movie.imdbID}`}>
+                <h2 className="text-[#00033D] font-bold mb-2">{movie.Title}</h2>
+                <Link to={`/movie/${encodeURIComponent(movie.Title)}`}>
                   <img
                     className="transition-transform duration-300 hover:scale-105 rounded-lg shadow-lg cursor-pointer"
-                    src={movie.Poster}
+                    src={
+                      movie.Poster !== "N/A" ? movie.Poster : "/placeholder.png"
+                    }
                     alt={movie.Title}
                   />
                 </Link>
-                <p>Year: {movie.Year}</p>
+                <p className="text-gray-600">Year: {movie.Year}</p>
               </li>
             ))}
           </ul>
