@@ -6,7 +6,7 @@ function SearchBar() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const OMDB_API_KEY = process.env.REACT_APP_OMDB_KEY;
   const validateSearchTerm = (term) => {
     return term.trim() !== "" && term.length >= 3;
   };
@@ -17,7 +17,7 @@ function SearchBar() {
     setError(null);
     try {
       const response = await fetch(
-        `https://www.omdbapi.com/?apikey=bc92eef9&s=${encodeURIComponent(
+        `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${encodeURIComponent(
           query
         )}`
       );

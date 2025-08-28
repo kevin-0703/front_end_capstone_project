@@ -6,13 +6,13 @@ function DetailPage() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const OMDB_API_KEY = process.env.REACT_APP_OMDB_KEY;
   useEffect(() => {
     const fetchMovieDetails = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://www.omdbapi.com/?apikey=bc92eef9&t=${encodeURIComponent(
+          `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodeURIComponent(
             title
           )}&plot=full`
         );
